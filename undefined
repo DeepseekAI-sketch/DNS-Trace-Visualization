@@ -1,0 +1,5 @@
+import NetworkMonitor from "@/components/NetworkMonitor";
+
+export default function NetworkMonitorStory() {
+  return <NetworkMonitor />;
+}

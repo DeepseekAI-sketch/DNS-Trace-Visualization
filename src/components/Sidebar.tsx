@@ -12,14 +12,7 @@ import {
   BarChart,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-interface AnalysisHistory {
-  id: string;
-  url: string;
-  timestamp: string;
-  latency: number;
-  status: "good" | "warning" | "critical";
-}
+import type { AnalysisHistory } from "@/lib/types";
 
 interface SidebarProps {
   className?: string;
@@ -44,10 +37,15 @@ const Sidebar = ({
   };
 
   const navItems = [
-    { icon: LayoutDashboard, label: "Dashboard", href: "#" },
-    { icon: Network, label: "Network Map", href: "#" },
-    { icon: Activity, label: "Monitoring", href: "#" },
-    { icon: BarChart, label: "Analytics", href: "#" },
+    { icon: LayoutDashboard, label: "Dashboard", href: "/" },
+    {
+      icon: Activity,
+      label: "History",
+      href: "/history",
+      badge: history.length > 0 ? history.length.toString() : undefined,
+    },
+    { icon: Network, label: "Network Map", href: "/network-map" },
+    { icon: BarChart, label: "Analytics", href: "/analytics" },
     { icon: Settings, label: "Settings", href: "#" },
   ];
 
@@ -75,39 +73,6 @@ const Sidebar = ({
       </div>
 
       <ScrollArea className="flex-1">
-        {!collapsed && history.length > 0 && (
-          <div className="p-4 border-b">
-            <h3 className="font-semibold mb-2">Analysis History</h3>
-            <div className="space-y-2">
-              {history.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => onHistoryItemClick(item)}
-                  className="p-2 rounded-lg hover:bg-accent cursor-pointer text-sm"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="truncate">{item.url}</span>
-                    <Badge
-                      className={cn(
-                        "ml-2",
-                        item.status === "good" && "bg-green-500",
-                        item.status === "warning" && "bg-yellow-500",
-                        item.status === "critical" && "bg-red-500",
-                      )}
-                      variant="secondary"
-                    >
-                      {Math.round(item.latency)}ms
-                    </Badge>
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    {new Date(item.timestamp).toLocaleTimeString()}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         <nav className="p-2">
           {navItems.map((item, index) => (
             <a
@@ -119,7 +84,16 @@ const Sidebar = ({
               )}
             >
               <item.icon className="h-5 w-5" />
-              {!collapsed && <span>{item.label}</span>}
+              {!collapsed && (
+                <div className="flex items-center justify-between flex-1">
+                  <span>{item.label}</span>
+                  {item.badge && (
+                    <Badge variant="secondary" className="ml-2">
+                      {item.badge}
+                    </Badge>
+                  )}
+                </div>
+              )}
             </a>
           ))}
         </nav>

@@ -127,9 +127,8 @@ const Home = () => {
                   ip: hop.ip,
                   name: hop.name,
                   avgLatency: Math.round(hop.latency),
-                  minLatency: Math.round(hop.latency * 0.9), // Estimate min latency
+                  minLatency: Math.round(hop.latency * 0.9),
                   currentLatency: Math.round(hop.latency),
-                  latencyHistory: [Math.round(hop.latency)],
                   packetLoss: hop.packetLoss,
                   status: hop.status,
                 })) || []
